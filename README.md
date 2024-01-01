@@ -12,7 +12,7 @@ Setup example for dein.toml
 
 ```toml
 [[plugins]]
-repo = 'impactaky/add_title_to_url'
+repo = 'impactaky/add_title_to_url.vim'
 hook_add = '''
     vmap 'm :'<,'>AddTitleToUrl<CR>
 '''
