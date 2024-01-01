@@ -14,6 +14,6 @@ Setup example for dein.toml
 [[plugins]]
 repo = 'impactaky/add_title_to_url'
 lazy = 1
-hook_source = '''
-vmap 'm :'<,'>AddTitleToUrl<CR>
+hook_add = '''
+    vmap 'm :'<,'>AddTitleToUrl<CR>
 '''
