@@ -4,6 +4,7 @@ import {
   getline,
   setline,
 } from "https://deno.land/x/denops_std@v5.2.0/function/mod.ts";
+import { batch } from "https://deno.land/x/denops_std@v5.2.0/batch/mod.ts";
 import { DOMParser } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
 
 async function getTitle(url: string): Promise<string> {
@@ -38,7 +39,12 @@ export async function main(denops: Denops): Promise<void> {
       await setline(denops, start, replaced);
     },
   };
-  await denops.cmd(
-    'command! -range AddTitleToUrl call denops#request("add_title_to_url", "addTitleToUrl", [<line1>, <line2>])',
-  );
+  await batch(denops, async (denops) => {
+    await denops.cmd(
+      'command! -range AddTitleToUrl call denops#request("add_title_to_url", "addTitleToUrl", [<line1>, <line2>])',
+    );
+    await denops.cmd(
+      "vnoremap <silent><Plug>(add_title_to_url) :AddTitleToUrl<CR>",
+    );
+  });
 }
