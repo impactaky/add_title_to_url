@@ -1,5 +1,6 @@
 import { Denops } from "https://deno.land/x/denops_std@v5.2.0/mod.ts";
 import {
+  col,
   getline,
   setline,
 } from "https://deno.land/x/denops_std@v5.2.0/function/mod.ts";
@@ -25,10 +26,14 @@ async function getTitle(url: string): Promise<string> {
 export async function main(denops: Denops): Promise<void> {
   denops.dispatcher = {
     async addTitleToUrl(start: number, end: number): Promise<void> {
+      const startCol = await col(denops, "'<") - 1;
+      const endCol = await col(denops, "'>") - 1;
       const lines = await getline(denops, start, end);
-      const replaced = await Promise.all(lines.map(async (url) => {
+      const replaced = await Promise.all(lines.map(async (line) => {
+        const url = line.slice(startCol, endCol + 1);
         const title = await getTitle(url);
-        return `[${title}](${url})`;
+        return line.slice(0, startCol) + `[${title}](${url})` +
+          line.slice(endCol + 1);
       }));
       await setline(denops, start, replaced);
     },
